@@ -1,52 +1,42 @@
-Cordova Gyroscope Plugin
-========
+# Cordova Gyroscope Plugin
 
-Description
---------
+> This project is a fork of the old [cordova-plugin-gyroscope](https://github.com/NeoLSN/cordova-plugin-gyroscope) published by *Jason Yang*. Thanks to him, this plugin is working.
+
+## Description
 
 This project's idea is inspired from these two projects.
 - [Android Gyroscope](https://github.com/zanderso/cordova-plugin-gyroscope)
 - [iOS Gyroscope](https://github.com/jhurliman/cordova-plugin-gyroscope)
 
-This project is merged by those two projects, and also provided an Angular module
-called `deviceGyroscope`.
+This project is merged by those two projects.
 
-Installation
---------
+## Installation
 
 ```bash
-cordova plugin add cordova-plugin-gyroscope@0.1.4
+cordova plugin add cordova-plugin-device-gyroscope@0.2.2
 ```
 
-Usage
---------
+## Usage
 
-### API
+This plugin is working like the [Apache Cordova Accelerometer plugin](https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-device-motion/), the API is the same.
+
+### Get the current gyroscope
 
 ```javascript
-var gyroscope = navigator.gyroscope;
-gyroscope.getCurrent
-gyroscope.watch
-gyroscope.clearWatch
+navigator.gyroscope.getCurrentGyroscope(gyroscopeSuccess, gyroscopeError);
 ```
 
-### For Angular
-
-1. Copy `deviceGyroscope.js` to your project folder.
-2. Add `deviceGyroscope` as a module.
+### Watch the gyroscope
 
 ```javascript
-angular
-  .module(
-    'app', [
-      ... other modules
-      'deviceGyroscope'
-    ]
-  )
+var watchID = navigator.gyroscope.watchGyroscope(gyroscopeSuccess,
+                                                        gyroscopeError,
+                                                        gyroscopeOptions);
 ```
-3. Inject `$deviceGyroscope` in controller. It's return a promise.
+
+### Stop the watch of the gyroscope
+
 ```javascript
-$deviceGyroscope.getCurrent()
-$deviceGyroscope.watch()
-$deviceGyroscope.clearWatch()
+navigator.gyroscope.clearWatch(watchID);
 ```
+
