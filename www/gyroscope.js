@@ -1,7 +1,3 @@
-// Copyright (c) 2014, the Dart project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 /**
  * This class provides access to device gyroscope data.
  * @constructor
@@ -9,7 +5,7 @@
 var argscheck = require('cordova/argscheck'),
     utils = require("cordova/utils"),
     exec = require("cordova/exec"),
-    Orientation = require('./Orientation');
+    Orientation = require('./orientation');
 
 // Is the gyroscope sensor running?
 var running = false;
@@ -69,10 +65,9 @@ var gyroscope = {
      *
      * @param {Function} successCallback    The function to call when the speed data is available
      * @param {Function} errorCallback      The function to call when there is an error getting the speed data. (OPTIONAL)
-     * @param {GyroscopeOptions} options    The options for getting the gyroscope data such as frequency. (OPTIONAL)
      */
-    getCurrent: function(successCallback, errorCallback, options) {
-        argscheck.checkArgs('fFO', 'gyroscope.getCurrent', arguments);
+    getCurrentGyroscope: function(successCallback, errorCallback) {
+        argscheck.checkArgs('fFO', 'gyroscope.getCurrentGyroscope', arguments);
 
         var p;
         var win = function(a) {
@@ -100,8 +95,9 @@ var gyroscope = {
      * @param {GyroscopeOptions} options    The options for getting the gyroscope data such as frequency. (OPTIONAL)
      * @return String                       The watch id that must be passed to #clearWatch to stop watching.
      */
-    watch: function(successCallback, errorCallback, options) {
-        argscheck.checkArgs('fFO', 'gyroscope.watch', arguments);
+    watchGyroscope: function(successCallback, errorCallback, options) {
+        argscheck.checkArgs('fFO', 'gyroscope.watchGyroscope', arguments);
+        
         // Default interval (10 sec)
         var frequency = (options && options.frequency && typeof options.frequency == 'number') ? options.frequency : 10000;
 

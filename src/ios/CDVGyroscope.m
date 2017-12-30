@@ -1,4 +1,3 @@
-
 #import <CoreMotion/CoreMotion.h>
 #import "CDVGyroscope.h"
 

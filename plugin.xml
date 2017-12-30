@@ -2,16 +2,16 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova-plugin-gyroscope"
-        version="0.1.4">
+        id="cordova-plugin-device-gyroscope"
+        version="0.2.0">
 
   <name>Device Gyroscope</name>
   <description>Cordova Device Gyroscope Plugin</description>
-  <author>Jason Yang</author>
-  <license>BSD</license>
+  <author>Alexis Tacnet</author>
+  <license>MIT</license>
 
-  <js-module src="www/Orientation.js" name="Orientation">
-    <clobbers target="Orientation"/>
+  <js-module src="www/orientation.js" name="orientation">
+    <clobbers target="orientation"/>
   </js-module>
 
   <js-module src="www/gyroscope.js" name="gyroscope">

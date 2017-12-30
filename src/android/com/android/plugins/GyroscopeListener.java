@@ -1,7 +1,3 @@
-// Copyright (c) 2014, the Dart project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 package com.android.plugins;
 
 import java.util.List;
@@ -38,7 +34,7 @@ public class GyroscopeListener extends CordovaPlugin implements SensorEventListe
     private float x, y, z;  // most recent speed values
     private long timestamp;  // time of most recent value
     private int status;  // status of listener
-    private int accuracy = SensorManager.SENSOR_STATUS_UNRELIABLE;
+    private int accuracy = SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM;
 
     private SensorManager sensorManager;  // Sensor manager
     private Sensor mSensor;  // Orientation sensor returned by sensor manager
@@ -138,20 +134,25 @@ public class GyroscopeListener extends CordovaPlugin implements SensorEventListe
         // If found, then register as listener
         if ((list != null) && (list.size() > 0)) {
           this.mSensor = list.get(0);
-          this.sensorManager.registerListener(this, this.mSensor, SensorManager.SENSOR_DELAY_UI);
-          this.setStatus(GyroscopeListener.STARTING);
+          if (this.sensorManager.registerListener(this, this.mSensor, SensorManager.SENSOR_DELAY_UI)) {
+            this.setStatus(GyroscopeListener.STARTING);
+            this.accuracy = SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM;
+          }
         } else {
           this.setStatus(GyroscopeListener.ERROR_FAILED_TO_START);
           this.fail(GyroscopeListener.ERROR_FAILED_TO_START, "No sensors found to register gyroscope listening to.");
           return this.status;
         }
 
+        startTimeout();
+
+        return this.status;
+    }
+    private void startTimeout() {
         // Set a timeout callback on the main thread.
         stopTimeout();
         mainHandler = new Handler(Looper.getMainLooper());
         mainHandler.postDelayed(mainRunnable, 2000);
-
-        return this.status;
     }
     private void stopTimeout() {
         if(mainHandler!=null){
@@ -176,9 +177,10 @@ public class GyroscopeListener extends CordovaPlugin implements SensorEventListe
      * Called two seconds after starting the listener.
      */
     private void timeout() {
-        if (this.status == GyroscopeListener.STARTING) {
-            this.setStatus(GyroscopeListener.ERROR_FAILED_TO_START);
-            this.fail(GyroscopeListener.ERROR_FAILED_TO_START, "Gyroscope could not be started.");
+        if (this.status == GyroscopeListener.STARTING &&
+            this.accuracy >= SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM) {
+            this.timestamp = System.currentTimeMillis();
+            this.win();
         }
     }
 
@@ -235,18 +237,6 @@ public class GyroscopeListener extends CordovaPlugin implements SensorEventListe
      */
     @Override
     public void onReset() {
-        if (this.status == GyroscopeListener.RUNNING) {
-            this.stop();
-        }
-    }
-    @Override
-    public void onResume(boolean multitasking) {
-        if (this.status == GyroscopeListener.STOPPED) {
-            this.start();
-        }
-    }
-    @Override
-    public void onPause(boolean multitasking) {
         if (this.status == GyroscopeListener.RUNNING) {
             this.stop();
         }
